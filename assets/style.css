@@ -20,7 +20,8 @@ img:hover {
 }
 
 .container {
-    height: 100%;
+    height: 95%;
+    margin: 10px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
@@ -92,15 +93,24 @@ img:hover {
   }
 
   .container .topbar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    flex-direction: column;
     justify-content: end;
     align-items: end;
     height: 120px;
   }
 
+  #equation {
+    color: gray;
+    font-size: 12px;
+  }
+
   .container .topbar p {
     text-align: end;
     margin: 10px;
-    font-size: 30px;
+    font-size: 24px;
   }
 
   .b3{
@@ -125,6 +135,7 @@ img:hover {
 
   .container *:hover {
     cursor: pointer;
+    transition: all 200ms;
   }
   
   .container *:after {
