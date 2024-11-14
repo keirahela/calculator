@@ -83,6 +83,7 @@ img:hover {
     background-color: #3C3C3C;
     position: relative;
     width: 100%;
+    transition: all 200ms;
   }
 
   .container *:not(.grid-row-wrapper, .grid-row-wrapper-2, sup, p) {

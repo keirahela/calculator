@@ -13,6 +13,22 @@ function calculateSmallDisplay() {
     document.getElementById("screen").innerText = currentEquation == "" ? "0" : currentEquation
 }
 
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+function lightenColor(rgbStr, factor) {
+    const rgb = rgbStr.match(/\d+/g).map(Number);
+    const lightened = rgb.map(channel => Math.min(Math.round(channel + (255 - channel) * factor), 255));
+    return `rgb(${lightened.join(',')})`;
+}
+
+function darkenColor(originalColor, lightenedColor, factor) {
+    const originalRgb = originalColor.match(/\d+/g).map(Number);
+    const lightenedRgb = lightenedColor.match(/\d+/g).map(Number);
+    const darkened = originalRgb.map((channel, index) => 
+        Math.round(lightenedRgb[index] + (channel - lightenedRgb[index]) * factor)
+    );
+    return `rgb(${darkened.join(',')})`;
+}
 function calculateResult(child) {
     if(child.innerText == "=") {
         if(currentEquation == "" && smallDisplay == "") return;
@@ -67,13 +83,28 @@ function setupButtons(children) {
             child.onclick = () => {
                 calculateResult(child);
             }
+
+            let originalColor;
+
+            child.onmouseenter = () => {
+                originalColor = window.getComputedStyle(child).backgroundColor;
+                const lightenedColor = lightenColor(originalColor, 0.2);
+                child.style.backgroundColor = lightenedColor;
+            }
+
+            child.onmouseleave = () => {
+                const lightenedColor = lightenColor(originalColor, 0.2);
+                child.style.backgroundColor = darkenColor(originalColor, lightenedColor, 1);
+            }
         }
     })
 }
 
 setupButtons()
 
-document.addEventListener('keydown', (event) => {
+let isAnimating = false;
+
+document.addEventListener('keydown', async (event) => {
     key = event.key;
     if(key == " "){
         document.getElementById('calculator').style.display = document.getElementById('calculator').style.display == "none" ? "block" : "none"
@@ -115,5 +146,10 @@ document.addEventListener('keydown', (event) => {
 
     if(found != undefined) {
         calculateResult(found)
+        const originalColor = window.getComputedStyle(found).backgroundColor;
+        const lightenedColor = lightenColor(originalColor, 0.1);
+        found.style.backgroundColor = lightenedColor;
+        await sleep(200);
+        found.style.backgroundColor = originalColor;
     }
 })
