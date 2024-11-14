@@ -9,24 +9,30 @@ function calculateSmallDisplay() {
     smallDisplay += currentEquation
     document.getElementById('equation').innerText += currentEquation
     console.log("made small display ", smallDisplay)
+    currentEquation = ""
+    document.getElementById("screen").innerText = currentEquation == "" ? "0" : currentEquation
 }
 
 function calculateResult(child) {
     if(child.innerText == "=") {
         if(currentEquation == "" && smallDisplay == "") return;
-        currentEquation = ""
         // TODO: fix calculating result with small display / big display
         console.log(smallDisplay + currentEquation)
         console.log(eval(smallDisplay + currentEquation))
         currentEquation = eval(smallDisplay + currentEquation).toString()
         smallDisplay = ""
+        document.getElementById('equation').innerText = smallDisplay
     } else if(child.innerText == "÷") {
         currentEquation += "/"
         calculateSmallDisplay()
     } else if(child.innerText == "×") {
         currentEquation += "*"
         calculateSmallDisplay()
-    } else if(child.innerText == "C" || child.innerText == "CE") {
+    } else if(child.innerText == "C") {
+        currentEquation = ""
+        smallDisplay = ""
+        document.getElementById('equation').innerText = ""
+    } else if(child.innerText == "CE") {
         currentEquation = ""
     } else if(child.innerText == "−") {
         currentEquation += "-"
@@ -73,16 +79,25 @@ document.addEventListener('keydown', (event) => {
         document.getElementById('calculator').style.display = document.getElementById('calculator').style.display == "none" ? "block" : "none"
         return;
     }
-    else if(key == "/") {
+    else if(key == "Backspace") {
+        currentEquation = ""
+        document.getElementById("screen").innerText = currentEquation == "" ? "0" : currentEquation
+    } else if(key == "Delete") {
+        currentEquation = ""
+        smallDisplay = ""
+        document.getElementById("screen").innerText = currentEquation == "" ? "0" : currentEquation
+        document.getElementById('equation').innerText = ""
+    } else if(key == "/") {
         key = "÷"
     } else if(key == "*") {
         key = "×"
     } else if(key == "-") {
         key = "−"
     } else if(key == "Enter") {
-        if(currentEquation == "") return;
-        console.log(eval(currentEquation))
-        currentEquation = eval(currentEquation).toString()
+        if(currentEquation == "" && smallDisplay == "") return;
+        console.log(smallDisplay + currentEquation)
+        console.log(eval(smallDisplay + currentEquation))
+        currentEquation = eval(smallDisplay + currentEquation).toString()
 
         document.getElementById("screen").innerText = currentEquation == "" ? "0" : currentEquation
     }
